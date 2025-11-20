@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  hub:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - OPERATOR_BASE_URL=http://mock-operator:8001
+      - HMAC_SECRET=changeme
+      - WEBHOOK_TARGET=http://mock-rgs:8002/webhooks
+    volumes:
+      - hub_data:/app
+    depends_on:
+      - mock-operator
+      - mock-rgs
+  mock-operator:
+    build: ./mock_operator
+    ports:
+      - "8001:8001"
+  mock-rgs:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./mock_rgs:/app
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002"]
+    ports:
+      - "8002:8002"
+volumes:
+  hub_data:

@@ -1,0 +1,38 @@
+{
+  "info": {
+    "name": "Integration Hub",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Debit",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Idempotency-Key", "value": "demo-key"}
+        ],
+        "url": {"raw": "{{baseUrl}}/wallet/debit", "host": ["{{baseUrl}}"], "path": ["wallet", "debit"]},
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"playerId\": \"player-1\",\n  \"amountCents\": 500,\n  \"currency\": \"USD\",\n  \"refId\": \"ref-123\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Credit",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Idempotency-Key", "value": "demo-key-2"}
+        ],
+        "url": {"raw": "{{baseUrl}}/wallet/credit", "host": ["{{baseUrl}}"], "path": ["wallet", "credit"]},
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"playerId\": \"player-1\",\n  \"amountCents\": 500,\n  \"currency\": \"USD\",\n  \"refId\": \"ref-456\"\n}"
+        }
+      }
+    }
+  ]
+}
