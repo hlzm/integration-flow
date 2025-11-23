@@ -1,0 +1,35 @@
+services:
+  hub:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - OPERATOR_BASE_URL=http://mock-operator:8001
+      - HMAC_SECRET=change_secret
+      - RGS_WEBHOOK_URL=http://mock-rgs:8002/webhooks
+      - BEARER_TOKEN=change_token
+      - DB_URL=sqlite:////data/integration.db
+    volumes:
+      - hub_data:/data
+    depends_on:
+      - mock-operator
+      - mock-rgs
+  mock-operator:
+    build: ./mock_operator
+    environment:
+      - INTEGRATION_WEBHOOK_URL=http://hub:8000/webhooks/incoming
+      - DB_URL=sqlite:////data/operator.db
+    ports:
+      - "8001:8001"
+    volumes:
+      - operator_data:/data
+  mock-rgs:
+    build: ./mock_rgs
+    volumes:
+      - rgs_data:/data
+    ports:
+      - "8002:8002"
+volumes:
+  hub_data:
+  rgs_data:
+  operator_data:

@@ -1,0 +1,76 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" version="26.0.15">
+  <diagram id="integration-hub" name="Integration Hub">
+    <mxGraphModel dx="1266" dy="1515" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="hub" value="Integration Hub (FastAPI)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="610" y="50" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="h1dRTkBf-YHPgZZ25QI6-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="operator" target="hub">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="h1dRTkBf-YHPgZZ25QI6-3" value="POST&amp;nbsp;&lt;div&gt;/webhooks/incoming&lt;/div&gt;" style="edgeLabel;align=center;verticalAlign=middle;resizable=0;points=[];html=1;" vertex="1" connectable="0" parent="h1dRTkBf-YHPgZZ25QI6-2">
+          <mxGeometry x="0.1541" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="operator" value="Operator (Mock)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12" parent="1" vertex="1">
+          <mxGeometry x="260" y="-240" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="rgs" value="RGS (Mock)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12" parent="1" vertex="1">
+          <mxGeometry x="960" y="-240" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="outboxOp" value="Operator Outbox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12" parent="1" vertex="1">
+          <mxGeometry x="420" y="-30" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="outboxRgs" value="RGS Outbox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12" parent="1" vertex="1">
+          <mxGeometry x="800" y="-30" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="replay" value="&lt;div&gt;Admin Replay&lt;/div&gt;POST /admin/replay/{queue}/{record_id}" style="shape=note;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11" parent="1" vertex="1">
+          <mxGeometry x="570" y="-270" width="260" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" value="enqueue" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;dashed=1" parent="1" source="hub" target="outboxOp" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="outboxOp" target="operator" edge="1">
+          <mxGeometry x="-0.1364" y="-25" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="h1dRTkBf-YHPgZZ25QI6-6" value="POST &#xa;/v2/players/{playerId}/{deposit / withdraw" style="edgeLabel;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge3">
+          <mxGeometry x="0.163" y="-3" relative="1" as="geometry">
+            <mxPoint x="77" y="-79" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge5" value="enqueue" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;dashed=1" parent="1" source="hub" target="outboxRgs" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge6" value="&lt;span style=&quot;font-size: 12px; text-wrap-mode: wrap; background-color: rgb(251, 251, 251);&quot;&gt;POST&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 12px; text-wrap-mode: wrap; background-color: rgb(251, 251, 251);&quot;&gt;/webhooks&lt;/span&gt;&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="outboxRgs" target="rgs" edge="1">
+          <mxGeometry x="0.5238" y="40" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge7" value="replay -&gt; pending" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;dashed=1" parent="1" source="replay" target="outboxOp" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge8" value="replay -&gt; pending" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="replay" target="outboxRgs" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="h1dRTkBf-YHPgZZ25QI6-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.961;entryY=1.013;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="rgs" target="hub">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1090" y="150" />
+              <mxPoint x="783" y="150" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="h1dRTkBf-YHPgZZ25QI6-5" value="POST &#xa;/wallet/{debit / credit}" style="edgeLabel;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=11;imageWidth=24;" vertex="1" connectable="0" parent="h1dRTkBf-YHPgZZ25QI6-4">
+          <mxGeometry x="0.48" y="1" relative="1" as="geometry">
+            <mxPoint x="-14" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

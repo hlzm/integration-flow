@@ -1,0 +1,199 @@
+{
+  "info": {
+    "name": "Integration Hub",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "hubUrl", "value": "http://localhost:8000"},
+    {"key": "bearerToken", "value": "change_token"},
+    {"key": "operatorUrl", "value": "http://localhost:8001"},
+    {"key": "rgsUrl", "value": "http://localhost:8002"},
+    {"key": "walletAction", "value": "debit"}
+  ],
+  "item": [
+    {
+      "name": "Wallet Debit",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Idempotency-Key", "value": "demo-key"},
+          {"key": "Authorization", "value": "Bearer {{bearerToken}}"}
+        ],
+        "url": {"raw": "{{hubUrl}}/wallet/debit", "host": ["{{hubUrl}}"], "path": ["wallet", "debit"]},
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"playerId\": \"player-1\",\n  \"amountCents\": 500,\n  \"currency\": \"USD\",\n  \"refId\": \"ref-123\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Wallet Credit",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Idempotency-Key", "value": "demo-key-2"},
+          {"key": "Authorization", "value": "Bearer {{bearerToken}}"}
+        ],
+        "url": {"raw": "{{hubUrl}}/wallet/credit", "host": ["{{hubUrl}}"], "path": ["wallet", "credit"]},
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"playerId\": \"player-1\",\n  \"amountCents\": 750,\n  \"currency\": \"USD\",\n  \"refId\": \"ref-456\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Wallet Generic Action (debit|credit)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {"key": "Content-Type", "value": "application/json"},
+          {"key": "Idempotency-Key", "value": "demo-key-3"},
+          {"key": "Authorization", "value": "Bearer {{bearerToken}}"}
+        ],
+        "url": {
+          "raw": "{{hubUrl}}/wallet/{{walletAction}}/",
+          "host": ["{{hubUrl}}"],
+          "path": ["wallet", "{{walletAction}}", ""]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"playerId\": \"player-1\",\n  \"amountCents\": 250,\n  \"currency\": \"USD\",\n  \"refId\": \"ref-789\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Webhook Outbox (list)",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{bearerToken}}"}],
+        "url": {
+          "raw": "{{hubUrl}}/webhooks/outbox?status=pending",
+          "host": ["{{hubUrl}}"],
+          "path": ["webhooks", "outbox"],
+          "query": [{"key": "status", "value": "pending"}]
+        }
+      }
+    },
+    {
+      "name": "Reconciliation CSV",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{bearerToken}}"}],
+        "url": {"raw": "{{hubUrl}}/reconciliation_data", "host": ["{{hubUrl}}"], "path": ["reconciliation_data"]}
+      }
+    },
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": {"raw": "{{hubUrl}}/health", "host": ["{{hubUrl}}"], "path": ["health"]}
+      }
+    },
+    {
+      "name": "Webhook Incoming (simulate operator callback)",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "{{hubUrl}}/webhooks/incoming", "host": ["{{hubUrl}}"], "path": ["webhooks", "incoming"]},
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"playerId\": \"player-1\",\n  \"amountCents\": 500,\n  \"currency\": \"USD\",\n  \"status\": \"OK\",\n  \"event\": \"withdraw\",\n  \"refId\": \"ref-123\",\n  \"correlationId\": \"corr-123\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Mock Operator Wallet Action",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {
+          "raw": "{{operatorUrl}}/v2/players/player-1/debit",
+          "host": ["{{operatorUrl}}"],
+          "path": ["v2", "players", "player-1", "debit"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 5,\n  \"currency\": \"USD\",\n  \"reference\": \"ref-ops-1\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Mock Operator Withdraw Action",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {
+          "raw": "{{operatorUrl}}/v2/players/player-1/withdraw",
+          "host": ["{{operatorUrl}}"],
+          "path": ["v2", "players", "player-1", "withdraw"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 5,\n  \"currency\": \"USD\",\n  \"reference\": \"ref-ops-2\",\n  \"correlationId\": \"corr-ops-2\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Mock Operator Transactions",
+      "request": {
+        "method": "GET",
+        "url": {"raw": "{{operatorUrl}}/v2/transactions", "host": ["{{operatorUrl}}"], "path": ["v2", "transactions"]}
+      }
+    },
+    {
+      "name": "Mock RGS List Webhooks",
+      "request": {
+        "method": "GET",
+        "url": {"raw": "{{rgsUrl}}/webhooks", "host": ["{{rgsUrl}}"], "path": ["webhooks"]}
+      }
+    },
+    {
+      "name": "Mock RGS Receive Webhook",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "{{rgsUrl}}/webhooks", "host": ["{{rgsUrl}}"], "path": ["webhooks"]},
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"playerId\": \"player-1\",\n  \"amountCents\": 500,\n  \"currency\": \"USD\",\n  \"status\": \"OK\",\n  \"event\": \"debit\",\n  \"refId\": \"ref-123\",\n  \"correlationId\": \"corr-rgs-1\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Admin Clear Hub DB",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Authorization", "value": "Bearer {{bearerToken}}"}],
+        "url": {"raw": "{{hubUrl}}/admin/clear-db", "host": ["{{hubUrl}}"], "path": ["admin", "clear-db"]}
+      }
+    },
+    {
+      "name": "Admin Replay Outbox",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Authorization", "value": "Bearer {{bearerToken}}"}],
+        "url": {
+          "raw": "{{hubUrl}}/admin/replay/{{queue}}/{{recordId}}",
+          "host": ["{{hubUrl}}"],
+          "path": ["admin", "replay", "{{queue}}", "{{recordId}}"]
+        }
+      }
+    },
+    {
+      "name": "Admin Clear Mock Operator DB",
+      "request": {
+        "method": "POST",
+        "url": {"raw": "{{operatorUrl}}/admin/clear-db", "host": ["{{operatorUrl}}"], "path": ["admin", "clear-db"]}
+      }
+    },
+    {
+      "name": "Admin Clear Mock RGS DB",
+      "request": {
+        "method": "POST",
+        "url": {"raw": "{{rgsUrl}}/admin/clear-db", "host": ["{{rgsUrl}}"], "path": ["admin", "clear-db"]}
+      }
+    }
+  ]
+}
