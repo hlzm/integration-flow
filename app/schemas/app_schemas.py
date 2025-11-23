@@ -1,9 +1,9 @@
-from pydantic import BaseModel, StrictInt
+from pydantic import BaseModel
 from typing import Optional, Any
 
 class WalletRequest(BaseModel):
     playerId: str
-    amountCents: StrictInt
+    amountCents: float
     currency: str
     refId: str
 

@@ -23,7 +23,7 @@ app = FastAPI(title="Mock RGS")
 
 class Webhook(BaseModel):
     playerId: str
-    amountCents: StrictInt
+    amountCents: float
     currency: str
     status: str
     event: str

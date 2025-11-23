@@ -339,7 +339,7 @@ def test_wallet_action_valid_signature_accepted(client, app_module):
     _, _, _ = app_module
     payload = {
         "playerId": "player-1",
-        "amountCents": 500,
+        "amountCents": 500.0,
         "currency": "USD",
         "refId": "ref-123",
     }
