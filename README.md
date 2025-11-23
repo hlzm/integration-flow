@@ -27,6 +27,10 @@ Swagger UI at `http://localhost:8000/swagger`.
 - Currency errors: `422 unsupported currency` when currency not in `supported_currencies`.
 - Idempotency conflicts: `409 idempotency conflict` when the same `Idempotency-Key` is reused with a different payload hash.
 - Unknown webhook: `404 unknown reference/correlation` when correlation/ref do not match a stored transaction.
+# Admin clear endpoints (dangerous):
+  - Hub: `POST /admin/clear-db` (bearer token required)
+  - Mock Operator: `POST {{operatorUrl}}/admin/clear-db`
+  - Mock RGS: `POST {{rgsUrl}}/admin/clear-db`
 
 # Tests
 - docker
