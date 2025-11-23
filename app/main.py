@@ -47,6 +47,7 @@ async def wallet_action_route(
     x_timestamp: str | None = Header(None),
 ):
     body = request.model_dump(by_alias=True)
+    # Validate signature if headers are provided - for testing purposes those can be optional
     if x_signature and x_timestamp:
         validate_signature(body, x_signature, x_timestamp)
     validate_currency(request.currency)

@@ -106,6 +106,8 @@ async def _send_callback(event: OperatorAction, player_id: str, amount: float, c
     }    
     try:
         async with httpx.AsyncClient(timeout=5.0) as client:
+            # No retry logic here for simplicity
+            # We should also add authentication headers here, not added for mock simplicity
             await client.post(INTEGRATION_WEBHOOK_URL, json=payload)
     except Exception:
         # Ignore callback delivery errors to keep the mock simple.

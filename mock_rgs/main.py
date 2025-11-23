@@ -69,6 +69,7 @@ def _serialize(record: ReceivedWebhook) -> dict:
 
 @app.post("/webhooks")
 async def webhooks(payload: Webhook, db: Session = Depends(get_db)):
+    # We should also add authentication here to simulate real RGS behavior, not added for mock simplicity
     logger.info(
         "RGS received webhook event=%s refId=%s correlationId=%s status=%s",
         payload.event,

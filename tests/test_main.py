@@ -44,7 +44,6 @@ def app_module(tmp_path_factory):
 
         # Disable the endless background worker during tests.
         main.app.router.on_startup.clear()
-        main.app.dependency_overrides[main.require_bearer_token] = lambda: None
 
         models.Base.metadata.drop_all(bind=database.engine)
         models.Base.metadata.create_all(bind=database.engine)
@@ -71,6 +70,8 @@ def test_health(client):
     assert resp.status_code == 200
     assert resp.json() == {"status": "ok"}
 
+headers = {"Authorization": "Bearer testtoken"}
+
 
 def test_wallet_action_creates_transaction_and_outbox(client, app_module):
     _, database, models = app_module
@@ -80,7 +81,7 @@ def test_wallet_action_creates_transaction_and_outbox(client, app_module):
         "currency": "USD",
         "refId": "ref-123",
     }
-    resp = client.post("/wallet/debit", json=payload)
+    resp = client.post("/wallet/debit", json=payload, headers=headers)
     assert resp.status_code == 200
     body = resp.json()
     assert body["status"] == "initiated"
@@ -104,7 +105,7 @@ def test_webhook_marks_transaction_sent_and_enqueues_rgs(client, app_module):
         "currency": "USD",
         "refId": "ref-456",
     }
-    create_resp = client.post("/wallet/debit", json=payload)
+    create_resp = client.post("/wallet/debit", json=payload, headers=headers)
     correlation_id = create_resp.json()["correlationId"]
 
     webhook_payload = {
@@ -116,7 +117,7 @@ def test_webhook_marks_transaction_sent_and_enqueues_rgs(client, app_module):
         "refId": "ref-456",
         "correlationId": correlation_id,
     }
-    resp = client.post("/webhooks/incoming", json=webhook_payload)
+    resp = client.post("/webhooks/incoming", json=webhook_payload, headers=headers)
     assert resp.status_code == 200
     assert resp.json() == {"status": "accepted"}
 
@@ -133,6 +134,7 @@ def test_webhook_marks_transaction_sent_and_enqueues_rgs(client, app_module):
 def test_idempotency_reuses_existing_response(client, app_module):
     _, database, models = app_module
     headers = {"Idempotency-Key": "demo-key"}
+    headers['Authorization'] = "Bearer testtoken"
     payload = {
         "playerId": "player-1",
         "amountCents": 750,
@@ -271,7 +273,7 @@ def test_wallet_action_currency_check(client):
         "currency": "TRY",
         "refId": "ref-123",
     }
-    resp = client.post("/wallet/debit", json=payload)
+    resp = client.post("/wallet/debit", json=payload, headers=headers)
     assert resp.status_code == 422
     assert resp.json() == {"detail": "unsupported currency"}
 
@@ -281,7 +283,7 @@ def test_wallet_action_currency_check(client):
         "currency": "EUR",
         "refId": "ref-123",
     }
-    resp = client.post("/wallet/debit", json=valid_payload)
+    resp = client.post("/wallet/debit", json=valid_payload, headers=headers)
     assert resp.status_code == 200
 
 
@@ -299,6 +301,7 @@ def test_wallet_action_tampered_signature_rejected(client, app_module):
     headers = {
         "X-Signature": bad_signature,
         "X-Timestamp": timestamp,
+        "Authorization": "Bearer testtoken",
     }
     resp = client.post("/wallet/debit", json=payload, headers=headers)
     assert resp.status_code == 401
@@ -350,6 +353,7 @@ def test_wallet_action_valid_signature_accepted(client, app_module):
     headers = {
         "X-Signature": signature,
         "X-Timestamp": timestamp,
+        "Authorization": "Bearer testtoken",
     }
     resp = client.post("/wallet/debit", json=payload, headers=headers)
     assert resp.status_code == 200
