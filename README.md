@@ -3,7 +3,7 @@
 Integration Hub as connecting piece between operator and RGS
 At the moment I have outbox for both operator and rgs as both are services on its own, but this can be adjusted so oubox is only used for RGS...
 
-(Diagram) ['![integration-hub](https://github.com/user-attachments/assets/e3c08efa-1023-4ec2-a681-363ea359b8c6)
+(Diagram)![integration-hub](https://github.com/user-attachments/assets/75f09e53-fc41-4966-94e8-33678ed107c0)
 
 # Running
 - Python 3.11 (matches the `python:3.11-slim` Docker base). Use the same locally for running pytest or scripts.
