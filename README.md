@@ -33,6 +33,12 @@ Swagger UI at `http://localhost:8000/swagger`.
   - Mock Operator: `POST {{operatorUrl}}/admin/clear-db`
   - Mock RGS: `POST {{rgsUrl}}/admin/clear-db`
 
+# Local development setup (venv, no Docker)
+- Create and activate a venv: `python3.11 -m venv .venv && source .venv/bin/activate`
+- Install deps: `pip install -r requirements.txt`
+- Env vars (tweak as needed): `export BEARER_TOKEN=change_token OPERATOR_BASE_URL=http://localhost:8001/ RGS_WEBHOOK_URL=http://localhost:8002/webhooks`
+- Run the hub: `uvicorn app.main:app --reload --port 8000`
+
 # Tests
 - docker
     ```
@@ -40,7 +46,7 @@ Swagger UI at `http://localhost:8000/swagger`.
     docker compose run --rm hub pytest -s
     ```
 
-- local run be in app root
+- Local tests (venv activated, repo root):
     ```
     pytest tests
     ```
