@@ -1,6 +1,7 @@
 # Runbook
 
 # Starting locally
+- Python 3.11 (same as the Docker base image).
 - `docker-compose up --build` to start the hub plus mocks.
 - Hub API available at `http://localhost:8000` with docs at `/docs`.
 - Include `Authorization: Bearer <token>` on hub requests; token defaults to `change_token` and can be set via env `BEARER_TOKEN`.

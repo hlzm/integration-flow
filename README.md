@@ -6,6 +6,7 @@ At the moment I have outbox for both operator and rgs as both are services on it
 (Diagram) ['![integration-hub](https://github.com/user-attachments/assets/e3c08efa-1023-4ec2-a681-363ea359b8c6)
 
 # Running
+- Python 3.11 (matches the `python:3.11-slim` Docker base). Use the same locally for running pytest or scripts.
 ```
 docker-compose up --build
 ```
