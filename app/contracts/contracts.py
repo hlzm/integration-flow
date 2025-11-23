@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, StrictInt
 
 from app.config import operator_hub_action_map
 from app.schemas.app_schemas import WalletRequest, WebhookPayload
@@ -24,7 +24,7 @@ class OperatorWalletRequest(BaseModel):
 
 class RgsRequest(BaseModel):
     playerId: str
-    amountCents: int
+    amountCents: StrictInt
     currency: str
     status: str
     event: str
@@ -36,7 +36,7 @@ class RgsRequest(BaseModel):
         event_value = operator_hub_action_map[webhook_payload.event]
         return cls(
             playerId=webhook_payload.playerId,
-            amountCents=webhook_payload.amount * 100,  # convert to cents
+            amountCents=int(webhook_payload.amount * 100),  # convert to cents
             currency=webhook_payload.currency,
             status=webhook_payload.status,
             event=event_value,

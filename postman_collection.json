@@ -44,26 +44,6 @@
       }
     },
     {
-      "name": "Wallet Generic Action (debit|credit)",
-      "request": {
-        "method": "POST",
-        "header": [
-          {"key": "Content-Type", "value": "application/json"},
-          {"key": "Idempotency-Key", "value": "demo-key-3"},
-          {"key": "Authorization", "value": "Bearer {{bearerToken}}"}
-        ],
-        "url": {
-          "raw": "{{hubUrl}}/wallet/{{walletAction}}/",
-          "host": ["{{hubUrl}}"],
-          "path": ["wallet", "{{walletAction}}", ""]
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"playerId\": \"player-1\",\n  \"amountCents\": 250,\n  \"currency\": \"USD\",\n  \"refId\": \"ref-789\"\n}"
-        }
-      }
-    },
-    {
       "name": "Webhook Outbox (list)",
       "request": {
         "method": "GET",
@@ -104,14 +84,14 @@
       }
     },
     {
-      "name": "Mock Operator Wallet Action",
+      "name": "Mock Operator Deposit Action",
       "request": {
         "method": "POST",
         "header": [{"key": "Content-Type", "value": "application/json"}],
         "url": {
-          "raw": "{{operatorUrl}}/v2/players/player-1/debit",
+          "raw": "{{operatorUrl}}/v2/players/player-1/deposit",
           "host": ["{{operatorUrl}}"],
-          "path": ["v2", "players", "player-1", "debit"]
+          "path": ["v2", "players", "player-1", "deposit"]
         },
         "body": {
           "mode": "raw",

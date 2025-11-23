@@ -55,6 +55,11 @@ async def wallet_action_route(
         existing = get_or_create_idempotency(db, idempotency_key, body_hash)
         if existing:
             return existing
+    if request.playerId.endswith("_bad"):
+        return {
+            'status': 'REJECTED',
+            'reason': "User Account Is Blocked",
+        }
     external_player_id = _resolve_external_player_id(request.playerId)
     operator_action = hub_operator_action_map[wallet_action]
     operator_url = str(settings.operator_base_url) + f"v2/players/{external_player_id}/{operator_action}"

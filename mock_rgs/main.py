@@ -2,7 +2,7 @@ import logging
 from typing import List
 
 from fastapi import Depends, FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, StrictInt
 from sqlalchemy import JSON, Column, DateTime, Integer, String, create_engine
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
 from sqlalchemy.sql import func
@@ -23,7 +23,7 @@ app = FastAPI(title="Mock RGS")
 
 class Webhook(BaseModel):
     playerId: str
-    amountCents: int
+    amountCents: StrictInt
     currency: str
     status: str
     event: str
