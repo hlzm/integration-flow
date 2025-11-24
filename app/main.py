@@ -24,8 +24,6 @@ logger = get_logger(__name__)
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Integration Hub")
 
-STARTING_BALANCE_CENTS = 0
-
 def _resolve_external_player_id(player_id: str) -> str:
     # In a real implementation, this would query a mapping service or database
     return f'{player_id}_ext'  # For mock purposes, return as is
@@ -86,14 +84,11 @@ async def wallet_action_route(
         correlation_id,
         initial_status,
     )
-    # dummy balance calculation
-    balance = STARTING_BALANCE_CENTS - request.amountCents if wallet_action == WalletAction.DEBIT else STARTING_BALANCE_CENTS + request.amountCents
 
     response = {
         'status': initial_status,
         'refId': request.refId,
         'correlationId': correlation_id,
-        'balanceCents': balance,
         'reason': None
     }
     if idempotency_key:

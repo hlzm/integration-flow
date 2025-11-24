@@ -29,6 +29,7 @@ class Webhook(BaseModel):
     event: str
     refId: str
     correlationId: str
+    balanceCents: float
 
 
 class ReceivedWebhook(Base):
@@ -42,6 +43,7 @@ class ReceivedWebhook(Base):
     currency = Column(String, nullable=False)
     correlationId = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    balanceCents = Column(Integer, nullable=True)
 
 Base.metadata.create_all(bind=engine)
 
@@ -64,6 +66,7 @@ def _serialize(record: ReceivedWebhook) -> dict:
         "currency": record.currency,
         "correlationId": record.correlationId,
         "createdAt": record.created_at.isoformat() if record.created_at else None,
+        "balanceCents": record.balanceCents,
     }
 
 
@@ -84,7 +87,8 @@ async def webhooks(payload: Webhook, db: Session = Depends(get_db)):
         playerId=payload.playerId,
         amountCents=payload.amountCents,
         currency=payload.currency,
-        correlationId=payload.correlationId
+        correlationId=payload.correlationId,
+        balanceCents=payload.balanceCents
     )
     db.add(record)
     db.commit()

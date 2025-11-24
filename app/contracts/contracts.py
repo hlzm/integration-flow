@@ -30,6 +30,7 @@ class RgsRequest(BaseModel):
     event: str
     refId: str
     correlationId: str
+    balanceCents: float
 
     @classmethod
     def from_webhook_payload(cls, webhook_payload: WebhookPayload) -> "RgsRequest":
@@ -42,4 +43,5 @@ class RgsRequest(BaseModel):
             event=event_value,
             refId=webhook_payload.refId,
             correlationId=webhook_payload.correlationId,
+            balanceCents=webhook_payload.balance * 100,  # convert to cents
         )

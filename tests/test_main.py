@@ -116,6 +116,7 @@ def test_webhook_marks_transaction_sent_and_enqueues_rgs(client, app_module):
         "event": "withdraw",
         "refId": "ref-456",
         "correlationId": correlation_id,
+        "balance": 95.00,
     }
     resp = client.post("/webhooks/incoming", json=webhook_payload, headers=headers)
     assert resp.status_code == 200
