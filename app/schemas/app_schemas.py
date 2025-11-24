@@ -22,6 +22,7 @@ class WebhookPayload(BaseModel):
     event: str
     refId: str
     correlationId: str
+    balance: float
     
 class ReconciliationResult(BaseModel):
     refId: str

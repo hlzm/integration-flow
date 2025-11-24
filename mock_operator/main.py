@@ -17,6 +17,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("mock-operator")
 
+STARTING_BALANCE = 100.0
 
 DB_URL = "sqlite:////data/operator.db"
 engine = create_engine(DB_URL, connect_args={"check_same_thread": False})
@@ -84,7 +85,7 @@ def _serialize_transaction(txn: Transaction) -> dict:
     }
 
 
-async def _send_callback(event: OperatorAction, player_id: str, amount: float, currency: str, reference: str, correlation_id: str, status: str):
+async def _send_callback(event: OperatorAction, player_id: str, amount: float, currency: str, reference: str, correlation_id: str, balance: float, status: str):
     if not INTEGRATION_WEBHOOK_URL:
         return
     logger.info(
@@ -103,6 +104,7 @@ async def _send_callback(event: OperatorAction, player_id: str, amount: float, c
         "event": event.value,
         "refId": reference,
         "correlationId": correlation_id,
+        "balance": balance,
     }    
     try:
         async with httpx.AsyncClient(timeout=5.0) as client:
@@ -165,6 +167,8 @@ async def wallet_action(
             direction,
             body.reference,
         )
+    # dummy balance calculation
+    balance = STARTING_BALANCE - body.amount if direction == OperatorAction.WITHDRAW else STARTING_BALANCE + body.amount
     asyncio.create_task(
         _send_callback(
             direction,
@@ -173,6 +177,7 @@ async def wallet_action(
             body.currency,
             body.reference,
             body.correlationId,
+            balance,
             status="OK",
         )
     )
